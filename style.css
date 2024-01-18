@@ -1,8 +1,56 @@
 body {
-    background-image: url(https://source.unsplash.com/1920x1080/?landscape);
+  background-image: url(https://source.unsplash.com/1920x1080/?landscape);
 }
 
-.container{
-    display: flex;
-    justify-content: center;
+* {
+  margin: 0;
+  padding: 0;
+}
+div.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 40%;
+
+  padding: 20px;
+
+  margin: 10px auto;
+
+  background-color: rgba(15, 61, 99, 0.74);
+  border-radius: 25px;
+}
+
+.container>div#input_field{
+    display: grid;
+    grid-template-columns: 90% 10%;
+    
+    margin: 0;
+    margin-bottom: 10px;
+
+
+}
+
+.container> div >input#search_bar{
+    /* width: 100%; */
+    border-radius: 16px;
+
+    height: 100%;
+    align-self: center;
+
+    text-align: center;
+    font-size: 1.4em;
+
+
+}
+.container>div>img{
+    width: 90%;
+    margin-left: 5px;
+    border: 1px rgb(255, 255, 255) solid;
+ background-color: white;
+    border-radius: 26px;
+}
+
+div#weather_data>div{
+margin: 20px 10px;
+color: rgb(204, 231, 240);
 }
