@@ -1,5 +1,5 @@
 body {
-  background-image: url(https://source.unsplash.com/1920x1080/?landscape);
+  /* background-image: url(https://source.unsplash.com/1920x1080/?landscape); */
 }
 
 * {
@@ -16,7 +16,7 @@ div.container {
 
   margin: 10px auto;
 
-  background-color: rgba(15, 61, 99, 0.74);
+  background-color: rgba(15, 61, 99, 0.829);
   border-radius: 25px;
 }
 
