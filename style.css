@@ -1,10 +1,12 @@
 body {
-  /* background-image: url(https://source.unsplash.com/1920x1080/?landscape); */
+  background-image: url(https://source.unsplash.com/1920x1080/?landscape);
 }
 
 * {
   margin: 0;
   padding: 0;
+
+  font-family: 'Trebuchet MS', Arial, sans-serif;
 }
 div.container {
   display: flex;
@@ -16,7 +18,7 @@ div.container {
 
   margin: 10px auto;
 
-  background-color: rgba(15, 61, 99, 0.829);
+  background-color: rgba(15, 61, 99, 0.938);
   border-radius: 25px;
 }
 
@@ -53,4 +55,14 @@ div.container {
 div#weather_data>div{
 margin: 20px 10px;
 color: rgb(204, 231, 240);
+}
+#temp_container{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+
+#temp_container>div#temp{
+  font-size: 3em;
 }
