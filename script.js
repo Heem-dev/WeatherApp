@@ -6,7 +6,10 @@ const rain= document.querySelector('#rain')
 const humid= document.querySelector('#humid')
 const wind= document.querySelector('#wind')
 const weekforecast= document.querySelector('#weekforecast')
-let icon = document.createElement('img')
+let icon = document.querySelector('img#cloudicon')
+let low = document.querySelector('div.low')
+let high = document.querySelector('div.high')
+const temphighlow = document.querySelector('#temphighlow')
 
 let lati;
 let long;
@@ -43,14 +46,20 @@ async function weather(city) {
   temp.textContent = Math.round(json.main.temp)+" C°";
 
   icon.src = 'https://openweathermap.org/img/wn/'+json.weather[0].icon+'@2x.png'
-  document.querySelector('#temp_container').append(icon)
-
-  clouds.textContent = 'Clouds: '+json.weather[0].description.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-
+  
+  high.textContent = 'High: '+ Math.round(json.main.temp_max)
+  low.textContent = "Low: "+Math.round(json.main.temp_min)
+  // document.querySelector('#temp_container').append(icon)
+  // temphighlow.append(high)
+  // temphighlow.append(low)
+  
+  let description = json.weather[0].description.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  clouds.textContent = 'Clouds: '+description
+  icon.title = description
   humid.textContent = 'Humidity: '+json.main.humidity+'%';
   wind.textContent = 'Wind Speed: '+json.wind.speed+' km/h'
 
-  document.querySelector('body').style.backgroundImage='url(https://source.unsplash.com/1920x1080/?'+city+')';
+  // document.querySelector('body').style.backgroundImage='url(https://source.unsplash.com/1920x1080/?'+city+')';
 }
 
 document.querySelector("#search_bar").addEventListener("keypress", (e) => {

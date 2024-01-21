@@ -1,5 +1,5 @@
 body {
-  background-image: url(https://source.unsplash.com/1920x1080/?landscape);
+  /* background-image: url(https://source.unsplash.com/1920x1080/?landscape); */
 }
 
 * {
@@ -56,13 +56,40 @@ div#weather_data>div{
 margin: 20px 10px;
 color: rgb(204, 231, 240);
 }
-#temp_container{
-  display: flex;
-  justify-content: space-around;
+#temp_container {
+  display: grid;
+  grid-template: 1fr 1fr /1fr 1fr;
+  justify-content: center;
   align-items: center;
+  justify-items: center;
 }
 
 
 #temp_container>div#temp{
   font-size: 3em;
+}
+/* #temp{
+  display: grid;
+  grid-template-columns: 2;
+  grid-template-rows: 2;
+  grid-column: span 2;
+} */
+
+#cloudicon{
+  grid-row: span 2;
+}
+
+div#temphighlow {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.high{
+  color: rgb(255, 255, 255);
+  /* font-weight: bold; */
+}
+
+.low{
+
 }
