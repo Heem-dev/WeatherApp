@@ -1,6 +1,5 @@
 body {
-  /* background-image: url(https://source.unsplash.com/1920x1080/?landscape); */
-}
+background-color: rgb(97, 103, 107);}
 
 * {
   margin: 0;
@@ -18,7 +17,7 @@ div.container {
 
   margin: 10px auto;
 
-  background-color: rgba(15, 61, 99, 0.938);
+  background-color: rgb(4, 37, 65);
   border-radius: 25px;
 }
 
@@ -53,8 +52,8 @@ div.container {
 }
 
 div#weather_data>div{
-margin: 20px 10px;
-color: rgb(204, 231, 240);
+margin: 15% 10px;
+color: rgb(194, 221, 230);
 }
 #temp_container {
   display: grid;
@@ -63,7 +62,10 @@ color: rgb(204, 231, 240);
   align-items: center;
   justify-items: center;
 }
-
+#weather_data> *:not(#temp_container){
+font-size: 1.5em;
+/* height: 3em; */
+}
 
 #temp_container>div#temp{
   font-size: 3em;
@@ -77,6 +79,7 @@ color: rgb(204, 231, 240);
 
 #cloudicon{
   grid-row: span 2;
+
 }
 
 div#temphighlow {
@@ -87,9 +90,22 @@ div#temphighlow {
 
 .high{
   color: rgb(255, 255, 255);
+
   /* font-weight: bold; */
 }
 
-.low{
 
+@media screen and (max-width: 950px) {
+  div.container {
+    width: 80%;
+  }
+
+  #weather_data> *{
+font-size: 0.9em;
+/* height: 3em; */
+}
+#weather_data> *:not(#temp_container){
+  font-size: 1.2em;
+  /* height: 3em; */
+  }
 }
