@@ -1,4 +1,6 @@
 const apiKey = "9a8146eb4e564879f6aabfbe095f751d";
+const ipAPI = "https://api.ipify.org?format=json";
+
 const cityName = document.querySelector("#search_bar");
 const temp = document.querySelector('#temp')
 const clouds = document.querySelector('#clouds')
@@ -13,6 +15,22 @@ const temphighlow = document.querySelector('#temphighlow')
 
 let lati;
 let long;
+
+//fetching ip
+
+fetch(ipAPI) 
+.then((response) => response.json())
+.then((data) => {
+  console.log(data);
+  // fetching city name from ip
+  fetch('https://ipapi.co/'+data.ip+'/json/')
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+    weather(data.city)
+  });
+});
+
 async function weather(city) {
   //geocoding city cords
 
@@ -60,6 +78,8 @@ async function weather(city) {
   wind.textContent = 'Wind Speed: '+json.wind.speed+' km/h'
 
   // document.querySelector('body').style.backgroundImage='url(https://source.unsplash.com/1920x1080/?'+city+')';
+
+cityName.placeholder = city
 }
 
 document.querySelector("#search_bar").addEventListener("keypress", (e) => {

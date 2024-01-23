@@ -51,8 +51,8 @@ div.container {
     border-radius: 26px;
 }
 
-div#weather_data>div{
-margin: 15% 10px;
+#weather_data>div{
+margin: 8% 10px;
 color: rgb(194, 221, 230);
 }
 #temp_container {
@@ -61,6 +61,12 @@ color: rgb(194, 221, 230);
   justify-content: center;
   align-items: center;
   justify-items: center;
+
+  border: 2px rgb(255, 255, 255) solid;
+  padding: 20px;
+  border-radius: 16px;
+
+  margin-top: 10px;
 }
 #weather_data> *:not(#temp_container){
 font-size: 1.5em;
