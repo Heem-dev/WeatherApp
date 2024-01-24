@@ -92,6 +92,8 @@ div#temphighlow {
   display: flex;
   justify-content: space-around;
   width: 100%;
+
+  font-size: 0.8em;
 }
 
 .high{

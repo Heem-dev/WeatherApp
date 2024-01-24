@@ -13,6 +13,8 @@ let low = document.querySelector('div.low')
 let high = document.querySelector('div.high')
 const temphighlow = document.querySelector('#temphighlow')
 
+const feels = document.querySelector('.feels')
+
 let lati;
 let long;
 
@@ -76,6 +78,8 @@ async function weather(city) {
   icon.title = description
   humid.textContent = 'Humidity: '+json.main.humidity+'%';
   wind.textContent = 'Wind Speed: '+json.wind.speed+' km/h'
+
+  feels.textContent = 'Feels Like: '+Math.round(json.main.feels_like)+' C°'
 
   // document.querySelector('body').style.backgroundImage='url(https://source.unsplash.com/1920x1080/?'+city+')';
 
