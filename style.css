@@ -1,11 +1,12 @@
 body {
-background-color: rgb(97, 103, 107);}
+  background-color: rgb(97, 103, 107);
+}
 
 * {
   margin: 0;
   padding: 0;
 
-  font-family: 'Trebuchet MS', Arial, sans-serif;
+  font-family: "Trebuchet MS", Arial, sans-serif;
 }
 div.container {
   display: flex;
@@ -21,39 +22,57 @@ div.container {
   border-radius: 25px;
 }
 
-.container>div#input_field{
-    display: grid;
-    grid-template-columns: 90% 10%;
-    
-    margin: 0;
-    margin-bottom: 10px;
+.container > div#input_field {
+  display: grid;
+  grid-template-columns: 70% 15% 15%;
 
+  margin: 0;
+  margin-bottom: 10px;
+}
+.tempFormat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+  align-self: center;
+  margin-left: 10px;
 
+  font-size: 1.2em;
+  color: rgb(194, 221, 230);
+}
+.tempFormat > * {
+  margin: 4px;
+  padding: 0;
+
+  cursor: pointer;
+}
+.unselected {
+  color: rgba(194, 221, 230, 0.171);
+}
+.container > div > input#search_bar {
+  /* width: 100%; */
+  border-radius: 16px;
+
+  height: 100%;
+  align-self: center;
+
+  text-align: center;
+  font-size: 1.4em;
+}
+.container > div > img {
+  width: 90%;
+  margin-left: 10px;
+  border: 1px rgb(255, 255, 255) solid;
+  background-color: white;
+  border-radius: 26px;
+
+  align-self: center;
 }
 
-.container> div >input#search_bar{
-    /* width: 100%; */
-    border-radius: 16px;
-
-    height: 100%;
-    align-self: center;
-
-    text-align: center;
-    font-size: 1.4em;
-
-
-}
-.container>div>img{
-    width: 90%;
-    margin-left: 5px;
-    border: 1px rgb(255, 255, 255) solid;
- background-color: white;
-    border-radius: 26px;
-}
-
-#weather_data>div{
-margin: 8% 10px;
-color: rgb(194, 221, 230);
+#weather_data > div {
+  margin: 8% 10px;
+  color: rgb(194, 221, 230);
 }
 #temp_container {
   display: grid;
@@ -68,12 +87,12 @@ color: rgb(194, 221, 230);
 
   margin-top: 10px;
 }
-#weather_data> *:not(#temp_container){
-font-size: 1.5em;
-/* height: 3em; */
+#weather_data > *:not(#temp_container) {
+  font-size: 1.5em;
+  /* height: 3em; */
 }
 
-#temp_container>div#temp{
+#temp_container > div#temp {
   font-size: 3em;
 }
 /* #temp{
@@ -83,9 +102,8 @@ font-size: 1.5em;
   grid-column: span 2;
 } */
 
-#cloudicon{
+#cloudicon {
   grid-row: span 2;
-
 }
 
 div#temphighlow {
@@ -96,24 +114,23 @@ div#temphighlow {
   font-size: 0.8em;
 }
 
-.high{
+.high {
   color: rgb(255, 255, 255);
 
   /* font-weight: bold; */
 }
-
 
 @media screen and (max-width: 950px) {
   div.container {
     width: 80%;
   }
 
-  #weather_data> *{
-font-size: 0.9em;
-/* height: 3em; */
-}
-#weather_data> *:not(#temp_container){
-  font-size: 1.2em;
-  /* height: 3em; */
+  #weather_data > * {
+    font-size: 0.9em;
+    /* height: 3em; */
+  }
+  #weather_data > *:not(#temp_container) {
+    font-size: 1.2em;
+    /* height: 3em; */
   }
 }
