@@ -158,3 +158,7 @@ document.querySelector("#search_bar").addEventListener("keypress", (e) => {
     weather(cityName.value);
   }
 });
+
+document.querySelector("#input_field> img").addEventListener("click", () => {
+  weather(cityName.value);
+});
