@@ -12,7 +12,7 @@ let icon = document.querySelector("img#cloudicon");
 let low = document.querySelector("div.low");
 let high = document.querySelector("div.high");
 const temphighlow = document.querySelector("#temphighlow");
-
+const todayName = document.querySelector(".todayName");
 const feels = document.querySelector(".feels");
 
 let lati;
@@ -133,6 +133,18 @@ async function weather(city) {
   if (selectedFormat === "metric") {
     speedFormat = "km/h";
   }
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  let dateNow = new Date(json.dt * 1000).getDay();
+
+  todayName.textContent = daysOfWeek[dateNow];
 
   let description = json.weather[0].description
     .split(" ")

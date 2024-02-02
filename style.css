@@ -79,18 +79,30 @@ div.container {
   min-height: 0;
 }
 
+#weather_data > h2 {
+  margin-top: 20px;
+  font-size: xx-large;
+  color: rgb(255, 255, 255);
+
+  flex-basis: 100%;
+  flex-grow: 1;
+  flex-shrink: 0;
+}
 #weather_data {
   /* min-width: 0px; */
 
   width: 100%;
 
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
+  text-align: center;
+
+  flex-wrap: wrap;
 }
 #weather_data > div {
-  margin: 8% 10px;
+  margin: 10px 10px;
   color: rgb(194, 221, 230);
 }
 #temp_container {
@@ -101,14 +113,17 @@ div.container {
   justify-items: center;
 
   border: 2px rgb(255, 255, 255) solid;
-  padding: 20px;
   border-radius: 16px;
+  padding: 20px 0;
 
-  margin-top: 10px;
+  /* margin-top: 10px; */
 
   min-width: 0px;
+  flex: 1 0 100%;
 }
-
+#forecast {
+  flex: 1 0 100%;
+}
 #temp_container > div#temp {
   font-size: 3em;
 }
@@ -148,6 +163,13 @@ div#temphighlow > * {
   color: rgb(255, 255, 255);
 
   /* font-weight: bold; */
+}
+
+.forecastContainer {
+  margin-top: 10px;
+
+  border: 2px rgb(255, 255, 255) solid;
+  border-radius: 16px;
 }
 
 @media screen and (max-width: 950px) {
