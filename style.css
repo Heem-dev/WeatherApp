@@ -170,6 +170,15 @@ div#temphighlow > * {
 
   border: 2px rgb(255, 255, 255) solid;
   border-radius: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+  min-width: 0;
+
+  padding: 20px 0;
+  gap: 10px;
 }
 
 @media screen and (max-width: 950px) {

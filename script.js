@@ -17,7 +17,7 @@ const feels = document.querySelector(".feels");
 
 let lati;
 let long;
-
+let formatSeleced = "C";
 const tempformat = document.querySelector(".tempFormat");
 
 let selectedFormat = "metric";
@@ -76,6 +76,7 @@ fetch(ipAPI)
         weather(data.city);
       });
   });
+
 let speedFormat = "km/h";
 async function weather(city) {
   //geocoding city cords
@@ -133,19 +134,12 @@ async function weather(city) {
   if (selectedFormat === "metric") {
     speedFormat = "km/h";
   }
-  const daysOfWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+
   let dateNow = new Date(json.dt * 1000).getDay();
 
   todayName.textContent = daysOfWeek[dateNow];
-
+  console.log(dateNow);
+  console.log(daysOfWeek[dateNow]);
   let description = json.weather[0].description
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -157,11 +151,65 @@ async function weather(city) {
 
   feels.textContent = "Feels Like: " + Math.round(json.main.feels_like);
 
-  // document.querySelector('body').style.backgroundImage='url(https://source.unsplash.com/1920x1080/?'+city+')';
-
   cityName.placeholder = city;
-}
 
+  // 5 day forecast API request
+  let url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lati}&lon=${long}&units=${selectedFormat}&appid=${apiKey}`;
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.list);
+      forecast(data.list);
+    });
+}
+const forecastContainer = document.querySelector(".forecastContainer");
+function forecast(list) {
+  forecastContainer.innerHTML = "";
+  for (let i = 0; i < list.length; i += 8) {
+    const item = list[i];
+    let date = new Date(item.dt * 1000);
+    let day = date.getDay();
+    let time = date.getHours();
+    console.log(daysOfWeek[day]);
+    console.log(time);
+
+    let forecastItem = document.createElement("div");
+    forecastItem.classList.add("forecastItem");
+    let forecastDay = document.createElement("div");
+    forecastDay.classList.add("forecastDay");
+    forecastDay.textContent = daysOfWeek[day];
+    forecastItem.append(forecastDay);
+
+    let forecastIcon = document.createElement("img");
+    forecastIcon.classList.add("forecastIcon");
+    forecastIcon.src =
+      "https://openweathermap.org/img/wn/" + item.weather[0].icon + ".png";
+    forecastItem.append(forecastIcon);
+
+    let highTemp = document.createElement("div");
+    highTemp.classList.add("high");
+    highTemp.textContent =
+      Math.round(item.main.temp_max) + " " + formatSeleced + "°";
+
+    let lowTemp = document.createElement("div");
+    lowTemp.classList.add("lowTemp");
+    lowTemp.textContent =
+      Math.round(item.main.temp_min) + " " + formatSeleced + "°";
+
+    forecastItem.append(highTemp);
+    forecastItem.append(lowTemp);
+    forecastContainer.append(forecastItem);
+  }
+}
+const daysOfWeek = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 document.querySelector("#search_bar").addEventListener("keypress", (e) => {
   if (e.keyCode === 13) {
     console.log(e);
