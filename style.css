@@ -31,18 +31,25 @@ div.container {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  flex: 0 0 0;
+  flex-wrap: nowrap;
   /* margin-bottom: 10px; */
 
   width: 100%;
+
+  gap: 10px;
 }
 .tempFormat {
   display: flex;
   flex-direction: column;
-  margin-left: 10px;
+  /* margin-left: 10px; */
 
   /* font-size: 1.2em; */
   color: rgb(194, 221, 230);
+
+  flex: 0 0 10%;
+
+  justify-content: center;
+  align-items: center;
 }
 .tempFormat > * {
   margin: 4px;
@@ -64,9 +71,11 @@ div.container {
 
   min-width: 0;
   min-height: 0;
+
+  flex: 1 0 70%;
 }
 .container > div > img {
-  margin-left: 10px;
+  /* margin-left: 10px; */
   border: 1px rgb(255, 255, 255) solid;
   background-color: white;
   border-radius: 26px;
@@ -77,6 +86,8 @@ div.container {
 
   min-width: 0;
   min-height: 0;
+
+  flex: 1 0 20%;
 }
 
 #weather_data > h2 {
@@ -164,7 +175,9 @@ div#temphighlow > * {
 
   /* font-weight: bold; */
 }
-
+#forecast {
+  width: 100%;
+}
 .forecastContainer {
   margin-top: 10px;
 
@@ -172,15 +185,44 @@ div#temphighlow > * {
   border-radius: 16px;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
-
+  flex-wrap: wrap;
   min-width: 0;
 
+  width: 100%;
   padding: 20px 0;
   gap: 10px;
 }
+.forecastItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 
+  border: 2px rgb(29 59 79);
+  border-style: solid;
+  border-radius: 16px;
+
+  padding: 10px;
+}
+.forecastItem > * {
+  font-size: calc(9px + 0.5vw);
+  margin: 3px 0;
+}
+.forecastContainer > * {
+  flex: 0 0 120px;
+}
+
+.forecastIcon {
+  margin-bottom: -10px;
+}
+.forecastDescription {
+  font-size: calc(9px + 0.5vw);
+
+  margin-bottom: 5px;
+}
 @media screen and (max-width: 950px) {
   div.container {
     width: 80%;

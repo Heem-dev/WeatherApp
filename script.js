@@ -7,7 +7,7 @@ const clouds = document.querySelector("#clouds");
 const rain = document.querySelector("#rain");
 const humid = document.querySelector("#humid");
 const wind = document.querySelector("#wind");
-const weekforecast = document.querySelector("#weekforecast");
+const weekforecast = document.querySelector("#week_forecast");
 let icon = document.querySelector("img#cloudicon");
 let low = document.querySelector("div.low");
 let high = document.querySelector("div.high");
@@ -20,14 +20,13 @@ let long;
 let formatSeleced = "C";
 const tempformat = document.querySelector(".tempFormat");
 
-let selectedFormat = "metric";
+let selectedFormat;
+
 selectedFormat = localStorage.getItem("selectedFormat");
-
-localStorage.setItem("selectedFormat", selectedFormat);
-
-// set a local storage item for the selected format.
-
-// get the selected format from local storage.
+if (selectedFormat === null) {
+  selectedFormat = "metric";
+  localStorage.setItem("selectedFormat", selectedFormat);
+}
 
 tempformat.querySelector(".cels").addEventListener("click", () => {
   selectedFormat = "metric";
@@ -79,6 +78,12 @@ fetch(ipAPI)
 
 let speedFormat = "km/h";
 async function weather(city) {
+  //delete pressure
+  let currentPressure = document.querySelector(".pressure");
+  if (currentPressure) {
+    currentPressure.remove();
+  }
+
   //geocoding city cords
 
   await fetch(
@@ -97,16 +102,17 @@ async function weather(city) {
     });
 
   // fetching weather data
-  let response = await fetch(
+  let urlRequest =
     "https://api.openweathermap.org/data/2.5/weather?lat=" +
-      lati +
-      "&lon=" +
-      long +
-      "&units=" +
-      selectedFormat +
-      "&appid=" +
-      apiKey
-  );
+    lati +
+    "&lon=" +
+    long +
+    "&units=" +
+    selectedFormat +
+    "&appid=" +
+    apiKey;
+  console.log(urlRequest);
+  let response = await fetch(urlRequest);
   let json = await response.json();
   console.log(json);
 
@@ -150,6 +156,11 @@ async function weather(city) {
   wind.textContent = "Wind Speed: " + json.wind.speed + " " + speedFormat;
 
   feels.textContent = "Feels Like: " + Math.round(json.main.feels_like);
+  // pressure
+  let pressure = document.createElement("div");
+  pressure.classList.add("pressure");
+  pressure.textContent = "Pressure: " + json.main.pressure + " hPa";
+  document.querySelector("#temp_container").append(pressure);
 
   cityName.placeholder = city;
 
@@ -195,9 +206,27 @@ function forecast(list) {
     lowTemp.classList.add("lowTemp");
     lowTemp.textContent =
       Math.round(item.main.temp_min) + " " + formatSeleced + "°";
+    let forecastDescription = document.createElement("div");
+    forecastDescription.classList.add("forecastDescription");
+    let description = item.weather[0].description;
+    description = description
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+    forecastDescription.textContent = description;
+    forecastItem.append(forecastDescription);
 
+    let humidity = document.createElement("div");
+    humidity.classList.add("humidity");
+    humidity.innerHTML = "Humidity: " + item.main.humidity + "%";
     forecastItem.append(highTemp);
     forecastItem.append(lowTemp);
+    forecastItem.append(humidity);
+    let windSpeed = document.createElement("div");
+    windSpeed.classList.add("windSpeed");
+    windSpeed.textContent = "Wind: " + item.wind.speed + " " + speedFormat;
+    forecastItem.append(windSpeed);
+
     forecastContainer.append(forecastItem);
   }
 }
