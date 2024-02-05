@@ -15,235 +15,94 @@ const temphighlow = document.querySelector("#temphighlow");
 const todayName = document.querySelector(".todayName");
 const feels = document.querySelector(".feels");
 
+const cels = document.querySelector(".cels");
+const fahr = document.querySelector(".fahr");
+const tempformat = document.querySelector(".tempFormat");
+
 let lati;
 let long;
 let formatSeleced = "C";
-const tempformat = document.querySelector(".tempFormat");
 
-let selectedFormat;
+let selectedFormat = localStorage.getItem("selectedFormat") || "metric";
+localStorage.setItem("selectedFormat", selectedFormat);
 
-selectedFormat = localStorage.getItem("selectedFormat");
-if (selectedFormat === null) {
-  selectedFormat = "metric";
+const toggleFormat = (format) => {
+  selectedFormat = format;
+  cels.classList.toggle("unselected", format === "imperial");
+  fahr.classList.toggle("unselected", format === "metric");
   localStorage.setItem("selectedFormat", selectedFormat);
+};
+
+cels.addEventListener("click", () => toggleFormat("metric"));
+fahr.addEventListener("click", () => toggleFormat("imperial"));
+
+cels.classList.toggle("unselected", selectedFormat === "imperial");
+fahr.classList.toggle("unselected", selectedFormat === "metric");
+
+async function fetchData(url) {
+  const response = await fetch(url);
+  return response.json();
 }
 
-tempformat.querySelector(".cels").addEventListener("click", () => {
-  selectedFormat = "metric";
-
-  tempformat.querySelector(".cels").classList.remove("unselected");
-  tempformat.querySelector(".fahr").classList.add("unselected");
-
-  localStorage.setItem("selectedFormat", selectedFormat);
-
-  console.log(selectedFormat);
-});
-
-console.log(selectedFormat);
-
-tempformat.querySelector(".fahr").addEventListener("click", () => {
-  selectedFormat = "imperial";
-
-  tempformat.querySelector(".cels").classList.add("unselected");
-  tempformat.querySelector(".fahr").classList.remove("unselected");
-
-  localStorage.setItem("selectedFormat", selectedFormat);
-
-  console.log(selectedFormat);
-});
-
-if (selectedFormat === "metric") {
-  tempformat.querySelector(".cels").classList.remove("unselected");
-  tempformat.querySelector(".fahr").classList.add("unselected");
+getCityFromIP(); // Get city from IP then call weather function
+async function getCityFromIP() {
+  const ip = await fetchData(ipAPI);
+  const cityFromIP = await fetchData(`https://ipapi.co/${ip.ip}/json/`);
+  weather(cityFromIP.city);
 }
-if (selectedFormat === "imperial") {
-  tempformat.querySelector(".cels").classList.add("unselected");
-  tempformat.querySelector(".fahr").classList.remove("unselected");
-}
-
-//fetching ip
-
-fetch(ipAPI)
-  .then((response) => response.json())
-  .then((data) => {
-    console.log(data);
-    // fetching city name from ip
-    fetch("https://ipapi.co/" + data.ip + "/json/")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        weather(data.city);
-      });
-  });
 
 let speedFormat = "km/h";
 async function weather(city) {
-  //delete pressure
-  let currentPressure = document.querySelector(".pressure");
-  if (currentPressure) {
-    currentPressure.remove();
-  }
+  const geoResponse = await fetchData(
+    `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`
+  );
+  const [data] = geoResponse;
+  long = data.lon;
+  lati = data.lat;
 
-  //geocoding city cords
+  const urlRequest = `https://api.openweathermap.org/data/2.5/weather?lat=${lati}&lon=${long}&units=${selectedFormat}&appid=${apiKey}`;
+  const json = await fetchData(urlRequest);
 
-  await fetch(
-    "https://api.openweathermap.org/geo/1.0/direct?q=" +
-      city +
-      "&limit=1&appid=" +
-      apiKey
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      long = data[0].lon;
-      lati = data[0].lat;
-      console.log(lati);
-      console.log(long);
-    });
+  selectedFormat == "metric" ? (formatSeleced = "C") : (formatSeleced = "F");
+  temp.textContent = `${Math.round(json.main.temp)} ${formatSeleced}°`;
 
-  // fetching weather data
-  let urlRequest =
-    "https://api.openweathermap.org/data/2.5/weather?lat=" +
-    lati +
-    "&lon=" +
-    long +
-    "&units=" +
-    selectedFormat +
-    "&appid=" +
-    apiKey;
-  console.log(urlRequest);
-  let response = await fetch(urlRequest);
-  let json = await response.json();
-  console.log(json);
+  icon.src = `https://openweathermap.org/img/wn/${json.weather[0].icon}@2x.png`;
 
-  console.log(json.main.temp);
-  if (selectedFormat === "metric") {
-    formatSeleced = "C";
-  }
-  if (selectedFormat === "imperial") {
-    formatSeleced = "F";
-  }
-  temp.textContent = Math.round(json.main.temp) + " " + formatSeleced + "°";
+  high.textContent = `High: ${Math.round(json.main.temp_max)}`;
+  low.textContent = `Low: ${Math.round(json.main.temp_min)}`;
 
-  icon.src =
-    "https://openweathermap.org/img/wn/" + json.weather[0].icon + "@2x.png";
+  selectedFormat == "metric" ? (speedFormat = "km/h") : (speedFormat = "mph");
+  const dateNow = convertUnixToDate(json.dt);
 
-  high.textContent = "High: " + Math.round(json.main.temp_max);
-  low.textContent = "Low: " + Math.round(json.main.temp_min);
-  // document.querySelector('#temp_container').append(icon)
-  // temphighlow.append(high)
-  // temphighlow.append(low)
-
-  if (selectedFormat === "imperial") {
-    speedFormat = "mph";
-  }
-  if (selectedFormat === "metric") {
-    speedFormat = "km/h";
-  }
-
-  let dateNow = new Date(json.dt * 1000).getDay();
-
-  todayName.textContent = daysOfWeek[dateNow];
-  console.log(dateNow);
-  console.log(daysOfWeek[dateNow]);
-  let description = json.weather[0].description
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-  clouds.textContent = "Clouds: " + description;
+  todayName.textContent = getDayOfWeek(dateNow);
+  const description = capitalizeFirstLetter(json.weather[0].description);
+  clouds.textContent = `Clouds: ${description}`;
   icon.title = description;
-  humid.textContent = "Humidity: " + json.main.humidity + "%";
-  wind.textContent = "Wind Speed: " + json.wind.speed + " " + speedFormat;
+  humid.textContent = `Humidity: ${json.main.humidity}%`;
+  wind.textContent = `Wind Speed: ${json.wind.speed} ${speedFormat}`;
 
-  feels.textContent = "Feels Like: " + Math.round(json.main.feels_like);
-  // pressure
-  let pressure = document.createElement("div");
-  pressure.classList.add("pressure");
-  pressure.textContent = "Pressure: " + json.main.pressure + " hPa";
-  document.querySelector("#temp_container").append(pressure);
+  feels.textContent = `Feels Like: ${Math.round(json.main.feels_like)}`;
+  const pressure = document.querySelector(".pressure");
+  pressure.textContent = `Pressure: ${json.main.pressure} hPa`;
 
   cityName.placeholder = city;
 
-  // 5 day forecast API request
-  let url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lati}&lon=${long}&units=${selectedFormat}&appid=${apiKey}`;
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data.list);
-      forecast(data.list);
-    });
+  const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lati}&lon=${long}&units=${selectedFormat}&appid=${apiKey}`;
+  const forecastData = await fetchData(url);
+  forecast(forecastData.list);
 }
+
 const forecastContainer = document.querySelector(".forecastContainer");
+
 function forecast(list) {
-  forecastContainer.innerHTML = "";
-  for (let i = 0; i < list.length; i += 8) {
+  for (let i = 0, iter = 1; i < list.length; i += 8, iter++) {
     const item = list[i];
-    let date = new Date(item.dt * 1000);
-    let day = date.getDay();
-    let time = date.getHours();
-    console.log(daysOfWeek[day]);
-    console.log(time);
-
-    let forecastItem = document.createElement("div");
-    forecastItem.classList.add("forecastItem");
-    let forecastDay = document.createElement("div");
-    forecastDay.classList.add("forecastDay");
-    forecastDay.textContent = daysOfWeek[day];
-    forecastItem.append(forecastDay);
-
-    let forecastIcon = document.createElement("img");
-    forecastIcon.classList.add("forecastIcon");
-    forecastIcon.src =
-      "https://openweathermap.org/img/wn/" + item.weather[0].icon + ".png";
-    forecastItem.append(forecastIcon);
-
-    let highTemp = document.createElement("div");
-    highTemp.classList.add("high");
-    highTemp.textContent =
-      Math.round(item.main.temp_max) + " " + formatSeleced + "°";
-
-    let lowTemp = document.createElement("div");
-    lowTemp.classList.add("lowTemp");
-    lowTemp.textContent =
-      Math.round(item.main.temp_min) + " " + formatSeleced + "°";
-    let forecastDescription = document.createElement("div");
-    forecastDescription.classList.add("forecastDescription");
-    let description = item.weather[0].description;
-    description = description
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-    forecastDescription.textContent = description;
-    forecastItem.append(forecastDescription);
-
-    let humidity = document.createElement("div");
-    humidity.classList.add("humidity");
-    humidity.innerHTML = "Humidity: " + item.main.humidity + "%";
-    forecastItem.append(highTemp);
-    forecastItem.append(lowTemp);
-    forecastItem.append(humidity);
-    let windSpeed = document.createElement("div");
-    windSpeed.classList.add("windSpeed");
-    windSpeed.textContent = "Wind: " + item.wind.speed + " " + speedFormat;
-    forecastItem.append(windSpeed);
-
-    forecastContainer.append(forecastItem);
+    updateForecastData(item, iter);
   }
 }
-const daysOfWeek = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
+
 document.querySelector("#search_bar").addEventListener("keypress", (e) => {
   if (e.keyCode === 13) {
-    console.log(e);
-    console.log(cityName);
-    // weather(cityName)
     weather(cityName.value);
   }
 });
@@ -251,3 +110,59 @@ document.querySelector("#search_bar").addEventListener("keypress", (e) => {
 document.querySelector("#input_field> img").addEventListener("click", () => {
   weather(cityName.value);
 });
+
+function updateForecastData(dayWeatherData, iter) {
+  const itemToEdit = document.querySelector(`.forecastItem:nth-child(${iter})`);
+  const date = convertUnixToDate(dayWeatherData.dt);
+  const day = getDayOfWeek(date);
+  const description = capitalizeFirstLetter(
+    dayWeatherData.weather[0].description
+  );
+  const icon = dayWeatherData.weather[0].icon;
+  const highTemp = Math.round(dayWeatherData.main.temp_max);
+  const lowTemp = Math.round(dayWeatherData.main.temp_min);
+  const humidity = dayWeatherData.main.humidity;
+  const windSpeed = dayWeatherData.wind.speed;
+  const speedFormat = selectedFormat === "metric" ? "km/h" : "mph";
+
+  itemToEdit.querySelector(".forecastDay").textContent = day;
+  itemToEdit.querySelector(
+    ".forecastIcon"
+  ).src = `https://openweathermap.org/img/wn/${icon}.png`;
+  itemToEdit.querySelector(".forecastIcon").title = description;
+  itemToEdit.querySelector(
+    ".high"
+  ).textContent = `${highTemp} ${formatSeleced}°`;
+  itemToEdit.querySelector(
+    ".lowTemp"
+  ).textContent = `${lowTemp} ${formatSeleced}°`;
+  itemToEdit.querySelector(".forecastDescription").textContent = description;
+  itemToEdit.querySelector(".humidity").textContent = `Humidity: ${humidity}%`;
+  itemToEdit.querySelector(
+    ".windSpeed"
+  ).textContent = `Wind: ${windSpeed} ${speedFormat}`;
+}
+
+function capitalizeFirstLetter(string) {
+  return string
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+function convertUnixToDate(unix) {
+  return new Date(unix * 1000);
+}
+
+function getDayOfWeek(date) {
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  return daysOfWeek[date.getDay()];
+}
